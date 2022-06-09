@@ -291,6 +291,7 @@ impl<'doc> Parser<'doc> for GenericParser<'doc,ErrorKind> {
         } else if let Ok(name)=self.var_name() {
             return Ok(Data::Var(name));
         } else {
+            let negative=self.then("-")?;
             let mut num=self.while_any(NUMBERS).to_string();
             if self.then(".")? {
                 num.push('.');
@@ -300,7 +301,13 @@ impl<'doc> Parser<'doc> for GenericParser<'doc,ErrorKind> {
                 return Err(self.create_error(ErrorKind::ExpectedNumber,true));
             }
             return match num.parse::<f64>() {
-                Ok(n)=>Ok(Data::Number(n)),
+                Ok(n)=>{
+                    if negative {
+                        Ok(Data::Number(-n))
+                    } else {
+                        Ok(Data::Number(n))
+                    }
+                },
                 Err(e)=>Err(self.create_error(e.into(),true)),
             };
         }

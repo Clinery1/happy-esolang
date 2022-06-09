@@ -7,7 +7,7 @@ name = "generic_parser"
 version = "1.0.0"
 
 [[package]]
-name = "unhappy"
+name = "happy"
 version = "0.1.0"
 dependencies = [
  "generic_parser",
